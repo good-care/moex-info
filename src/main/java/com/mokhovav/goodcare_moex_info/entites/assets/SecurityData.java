@@ -3,10 +3,10 @@ package com.mokhovav.goodcare_moex_info.moexdata;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StockSharesList {
+public class SecurityList {
     private DataFormat securities;
 
-    public StockSharesList() {
+    public SecurityList() {
     }
 
     public DataFormat getSecurities() {
