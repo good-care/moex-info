@@ -8,5 +8,4 @@ public interface SQLSettings {
         String[] getPackagesToScan();
         String getDDLAuto();
         String getDialect();
-
 }

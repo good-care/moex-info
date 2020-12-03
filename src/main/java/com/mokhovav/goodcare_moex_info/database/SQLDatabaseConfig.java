@@ -1,6 +1,5 @@
 package com.mokhovav.goodcare_moex_info.database;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -18,9 +17,11 @@ import java.util.Properties;
 public class SQLDatabaseConfig {
 
     private final SQLSettings sqlSettings;
+    private final SQLAdditionalSettings sqlAdditionalSettings;
 
-    public SQLDatabaseConfig(SQLSettings sqlSettings) {
+    public SQLDatabaseConfig(SQLSettings sqlSettings, SQLAdditionalSettings sqlAdditionalSettings) {
         this.sqlSettings = sqlSettings;
+        this.sqlAdditionalSettings = sqlAdditionalSettings;
     }
 
     @Bean

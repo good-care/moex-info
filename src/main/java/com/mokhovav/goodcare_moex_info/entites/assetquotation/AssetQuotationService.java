@@ -80,9 +80,7 @@ public class AssetQuotationService {
             for (AssetQuotation quotation : assetQuotations) {
                 try {
                     if (findByAssetAndDate(quotation, session) == 0) {
-
                         session.save(quotation);
-
                         result++;
                     }
                 } catch (GoodCareException e) {
@@ -94,7 +92,6 @@ public class AssetQuotationService {
                 session.clear();
             }
             System.out.println(count);
-            if (count == 1000) break;
         }
         transaction.commit();
         session.close();

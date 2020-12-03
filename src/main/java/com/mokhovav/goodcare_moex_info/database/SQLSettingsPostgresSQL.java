@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Primary
-public class SQLSettingsPostgresSQL implements SQLSettings {
+public class SQLSettingsPostgresSQL implements SQLSettings, SQLAdditionalSettings {
 
     private final Environment environment;
 
@@ -53,5 +53,10 @@ public class SQLSettingsPostgresSQL implements SQLSettings {
     @Override
     public String getDialect() {
         return environment.getProperty("hibernate.sql-dialect");
+    }
+
+    @Override
+    public String getTimeZone() {
+        return environment.getProperty("hibernate.timezone");
     }
 }

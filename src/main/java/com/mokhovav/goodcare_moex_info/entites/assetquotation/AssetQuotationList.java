@@ -1,4 +1,6 @@
 package com.mokhovav.goodcare_moex_info.entites.assetquotation;
 
-public class AssetQuotationList {
+import java.util.ArrayList;
+
+public class AssetQuotationList extends ArrayList<AssetQuotation> {
 }

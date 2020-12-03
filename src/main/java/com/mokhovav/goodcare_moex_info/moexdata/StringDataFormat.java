@@ -1,6 +1,6 @@
 package com.mokhovav.goodcare_moex_info.moexdata;
 
-public class DataFormat {
+public class StringDataFormat {
     private String[][] data;
 
     public String[][] getData() {

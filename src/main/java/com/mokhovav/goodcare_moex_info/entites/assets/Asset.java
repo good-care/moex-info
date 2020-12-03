@@ -1,22 +1,23 @@
-package com.mokhovav.goodcare_moex_info.entites;
+package com.mokhovav.goodcare_moex_info.entites.assets;
+
+import com.mokhovav.goodcare_moex_info.entites.AssetType;
+import com.mokhovav.goodcare_moex_info.entites.Currency;
+import com.mokhovav.goodcare_moex_info.entites.Issuer;
+import com.mokhovav.goodcare_moex_info.entites.SimplyNameEntity;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "goodcare_assets")
-public class Asset extends SimplyEntity{
+public class Asset extends SimplyNameEntity {
     @Column(name = "security_id")
     private String securityId;
-    @ManyToOne(targetEntity = Currency.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "currency_id")
     private Currency currency;
     @ManyToOne(targetEntity = Issuer.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "issuer_id")
     private Issuer issuer;
     @Column(name = "is_trade")
     private boolean isTrade;
-    @ManyToOne(targetEntity = AssetType.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "asset_type_id")
     private AssetType assetType;
 
     public Asset() {

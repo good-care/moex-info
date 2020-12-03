@@ -1,4 +1,6 @@
 package com.mokhovav.goodcare_moex_info.entites;
 
-public class EventType {
+public enum  EventType {
+    BUY,
+    SALE
 }

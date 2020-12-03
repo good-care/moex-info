@@ -1,13 +1,13 @@
 package com.mokhovav.goodcare_moex_info.moexdata;
 
-public class StringDataFormat {
-    private String[][] data;
+public class IntegerDataFormat {
+    private int[][] data;
 
-    public String[][] getData() {
+    public int[][] getData() {
         return data;
     }
 
-    public void setData(String[][] data) {
+    public void setData(int[][] data) {
         this.data = data;
     }
 }

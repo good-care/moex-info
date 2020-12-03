@@ -1,19 +1,18 @@
-package com.mokhovav.goodcare_moex_info.moexdata;
+package com.mokhovav.goodcare_moex_info.entites.assets;
 
-import org.springframework.stereotype.Component;
+import com.mokhovav.goodcare_moex_info.moexdata.StringDataFormat;
 
-@Component
-public class SecurityList {
-    private DataFormat securities;
+public class SecurityData {
+    private StringDataFormat securities;
 
-    public SecurityList() {
+    public SecurityData() {
     }
 
-    public DataFormat getSecurities() {
+    public StringDataFormat getSecurities() {
         return securities;
     }
 
-    public void setSecurities(DataFormat securities) {
+    public void setSecurities(StringDataFormat securities) {
         this.securities = securities;
     }
 }

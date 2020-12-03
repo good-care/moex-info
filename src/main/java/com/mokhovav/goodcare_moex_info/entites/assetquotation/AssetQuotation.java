@@ -1,6 +1,10 @@
-package com.mokhovav.goodcare_moex_info.entites;
+package com.mokhovav.goodcare_moex_info.entites.assetquotation;
 
+import com.mokhovav.goodcare_moex_info.entites.QuotationType;
+import com.mokhovav.goodcare_moex_info.entites.SimplyEntity;
 import com.mokhovav.goodcare_moex_info.entites.assets.Asset;
+import org.springframework.boot.convert.DataSizeUnit;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -8,10 +12,8 @@ import java.sql.Timestamp;
 
 @Entity
 @Table(name = "goodcare_assets_quotations")
-public class AssetQuotation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class AssetQuotation extends SimplyEntity {
+
     @ManyToOne(targetEntity = Asset.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "moex_asset_id")
     private Asset moexAsset;
@@ -22,14 +24,6 @@ public class AssetQuotation {
     private QuotationType quotationType;
 
     public AssetQuotation() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Asset getMoexAsset() {
