@@ -10,11 +10,11 @@ public class ErrorResponse {
     }
 
     public ErrorResponse(String code, String type, String place, String message) {
-         error = new Error();
-         error.setCode(code);
-         error.setType(type);
-         error.setPlace(place);
-         error.setMessage(message);
+        error = new Error();
+        error.setCode(code);
+        error.setType(type);
+        error.setPlace(place);
+        error.setMessage(message);
     }
 
     public Error getError() {

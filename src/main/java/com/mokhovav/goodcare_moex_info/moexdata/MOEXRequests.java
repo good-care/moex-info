@@ -9,9 +9,16 @@ public class MOEXRequests {
         return stockIndex;
     }
 
-    public static String getStockIndexHistory(String dateFrom, String securityId) {
+    public static String getStockIndexHistory(String securityId, String dateFrom) {
         return "https://iss.moex.com/iss/history/engines/stock/markets/index/securities" + "/" + securityId + ".json?from=" + dateFrom + "&iss.meta=off&history.columns=SECID,TRADEDATE,CLOSE";
+    }
 
+    public static String getStockShareHistory(String securityId, String dateFrom) {
+        return "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities" + "/" + securityId + ".json?from=" + dateFrom + "&iss.meta=off&history.columns=SECID,TRADEDATE,CLOSE";
+    }
+
+    public static String getStockBondHistory(String securityId, String dateFrom) {
+        return "https://iss.moex.com/iss/history/engines/stock/markets/bonds/securities" + "/" + securityId + ".json?from=" + dateFrom + "&iss.meta=off&history.columns=SECID,TRADEDATE,CLOSE";
     }
 
     public static String getStockShares() {
@@ -21,4 +28,6 @@ public class MOEXRequests {
     public static String getStockBonds() {
         return stockBonds;
     }
+
+
 }

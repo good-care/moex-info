@@ -12,8 +12,8 @@ hibernate:
   host: localhost
   port: 5432
   database: goodcare
-  username: user
-  password: pwd
+  username: ${POSTGRES_USER}
+  password: ${POSTGRES_PASSWORD}
   entities:
     moex: com.mokhovav.goodcare_moex_info.entites
 

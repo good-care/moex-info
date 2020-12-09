@@ -1,11 +1,13 @@
 package com.mokhovav.goodcare_moex_info;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mokhovav.goodcare_moex_info.entites.assets.SecurityData;
+import com.mokhovav.goodcare_moex_info.entites.assetquotation.AssetQuotationHistoryData;
+import com.mokhovav.goodcare_moex_info.entites.assets.AssetData;
 import com.mokhovav.goodcare_moex_info.exceptions.GoodCareException;
 import com.mokhovav.goodcare_moex_info.logging.Logger;
+import com.mokhovav.goodcare_moex_info.moexdata.MOEXData;
+import com.mokhovav.goodcare_moex_info.moexdata.MOEXRequests;
 import org.junit.Before;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,9 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
+
+import java.util.List;
+import java.util.Optional;
 
 @ContextConfiguration(classes = {GoodCareMOEXInfo.class})
 @SpringBootTest
@@ -31,22 +36,83 @@ public class RestRequestsServiceTests {
 
     @Test
     @Order(1)
-    public void getMOEXStockSharesSecurities(){
-        ObjectMapper mapper = new ObjectMapper();
+    public void getMOEXStockIndexes() {
+        checkAssetRequestAnswerSize(MOEXRequests.getStockIndex(), AssetData.class);
+    }
+
+    @Test
+    @Order(2)
+    public void getMOEXStockShares() {
+        checkAssetRequestAnswerSize(MOEXRequests.getStockShares(), AssetData.class);
+    }
+
+    @Test
+    @Order(3)
+    public void getMOEXStockBonds() {
+        checkAssetRequestAnswerSize(MOEXRequests.getStockBonds(), AssetData.class);
+    }
+
+    @Test
+    @Order(4)
+    public void getMOEXStockIndexHistory() {
+        checkAssetHistoryRequestAnswerSize(MOEXRequests.getStockIndexHistory("AKEUA", "2020-12-01"), AssetQuotationHistoryData.class);
+    }
+
+    @Test
+    @Order(5)
+    public void getMOEXStockShareHistory() {
+        checkAssetHistoryRequestAnswerSize(MOEXRequests.getStockShareHistory("ABRD", "2020-12-01"), AssetQuotationHistoryData.class);
+    }
+
+    @Test
+    @Order(6)
+    public void getMOEXStockBondHistory() {
+        checkAssetHistoryRequestAnswerSize(MOEXRequests.getStockBondHistory("RU000A101NG2", "2020-12-01"), AssetQuotationHistoryData.class);
+    }
+
+    private void checkAssetRequestAnswerSize(String request, Class c) {
         try {
-            SecurityData stockSharesList = (SecurityData) restRequestsService.getPostInJson(
-                    "https://iss.moex.com/iss/engines/stock/markets/shares/securities.json?iss.meta=off",
-                    SecurityData.class);
-            logger.info(mapper.writeValueAsString(stockSharesList));
+            AssetData assetData = (AssetData) restRequestsService.getPostInJson(
+                    request,
+                    c
+            );
+            Assertions.assertTrue(
+                    Optional.ofNullable(assetData)
+                            .map(AssetData::getSecurities)
+                            .map(MOEXData::getData)
+                            .map(List::size)
+                            .orElse(0) > 0
+            );
         } catch (GoodCareException e) {
-            try {
-                String answer = mapper.writeValueAsString(e.getResponse());
-                logger.info(answer);
-            } catch (JsonProcessingException ex) {
-                ex.printStackTrace();
-            }
-        } catch (JsonProcessingException ex) {
-            ex.printStackTrace();
+            Assertions.assertTrue(false);
+            logger.error(e.getMessage());
         }
     }
+
+    private void checkAssetHistoryRequestAnswerSize(String request, Class c) {
+        try {
+            AssetQuotationHistoryData historyData = (AssetQuotationHistoryData) restRequestsService.getPostInJson(
+                    request,
+                    c
+            );
+            Assertions.assertTrue(
+                    Optional.ofNullable(historyData)
+                            .map(AssetQuotationHistoryData::getHistory)
+                            .map(MOEXData::getData)
+                            .map(List::size)
+                            .orElse(0) > 0
+            );
+            Assertions.assertTrue(
+                    Optional.ofNullable(historyData)
+                            .map(AssetQuotationHistoryData::getCursor)
+                            .map(MOEXData::getData)
+                            .map(List::size)
+                            .orElse(0) > 0
+            );
+        } catch (GoodCareException e) {
+            Assertions.assertTrue(false);
+            logger.error(e.getMessage());
+        }
+    }
+
 }

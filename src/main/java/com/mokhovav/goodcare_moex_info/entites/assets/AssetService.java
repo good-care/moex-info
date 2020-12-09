@@ -5,6 +5,7 @@ import com.mokhovav.goodcare_moex_info.entites.AssetType;
 import com.mokhovav.goodcare_moex_info.entites.Currency;
 import com.mokhovav.goodcare_moex_info.exceptions.GoodCareException;
 import com.mokhovav.goodcare_moex_info.logging.Logger;
+import com.mokhovav.goodcare_moex_info.moexdata.MOEXData;
 import com.mokhovav.goodcare_moex_info.moexdata.MOEXRequests;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,7 +13,7 @@ import org.hibernate.Transaction;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,85 +30,81 @@ public class AssetService {
     }
 
     public AssetList getIndexList() throws GoodCareException {
-        return getAssetList(AssetType.INDEX, MOEXRequests.getStockIndex());
+        return getAssetList(MOEXRequests.getStockIndex(), AssetType.INDEX);
     }
 
     public AssetList getShareList() throws GoodCareException {
-        return getAssetList(AssetType.SHARE, MOEXRequests.getStockShares());
+        return getAssetList(MOEXRequests.getStockShares(), AssetType.SHARE);
     }
 
     public AssetList getBondList() throws GoodCareException {
-        return getAssetList(AssetType.BOND, MOEXRequests.getStockBonds());
+        return getAssetList(MOEXRequests.getStockBonds(), AssetType.BOND);
     }
 
-    private AssetList getAssetList(AssetType assetType, String request) throws GoodCareException {
+    private AssetList getAssetList(String request, AssetType assetType) throws GoodCareException {
         AssetList assetList = new AssetList();
-        Optional<SecurityData> response =
-                Optional.ofNullable(
-                        (SecurityData) restRequestsService.getPostInJson(request, SecurityData.class)
-                );
-        response
-                .map(r -> r.getSecurities().getData())
-                .map(Arrays::stream)
-                .map(stream -> {
-                    stream.forEach(str -> addToAssertList(str, assetList, assetType));
-                    return null;
-                });
+
+        AssetData assetData = (AssetData) restRequestsService.getPostInJson(
+                request,
+                AssetData.class
+        );
+
+        Optional.ofNullable(assetData)
+                .map(AssetData::getSecurities)
+                .map(MOEXData::getData)
+                .get()
+                .stream()
+                .forEach(strings -> addToAssertList(strings, assetList, assetType));
+
         return assetList;
     }
 
-    private void addToAssertList(String[] str, AssetList indexList, AssetType assetType) {
-        Asset asset = new Asset();
-        asset.setSecurityId(str[0]);
-        asset.setName(str[1]);
-        if (str[2] != null)
-            switch (str[2]) {
-                case "RUB":
-                case "SUR":
-                    asset.setCurrency(Currency.RUB);
-                    break;
-                case "USD":
-                    asset.setCurrency(Currency.USD);
-                    break;
-                case "EUR":
-                    asset.setCurrency(Currency.EUR);
-                    break;
-            }
-        asset.setTrade(true);
-        asset.setAssetType(assetType);
-        indexList.add(asset);
+    private void addToAssertList(List<String> str, AssetList indexList, AssetType assetType) {
+        if (str.size() == 3) {
+            Asset asset = new Asset();
+            asset.setSecurityId(str.get(0));
+            asset.setName(str.get(1));
+            if (str.get(2) != null)
+                switch (str.get(2)) {
+                    case "RUB":
+                    case "SUR":
+                        asset.setCurrency(Currency.RUB);
+                        break;
+                    case "USD":
+                        asset.setCurrency(Currency.USD);
+                        break;
+                    case "EUR":
+                        asset.setCurrency(Currency.EUR);
+                        break;
+                }
+            asset.setTrade(true);
+            asset.setAssetType(assetType);
+            indexList.add(asset);
+        }
     }
 
-    public int saveAssertListToDB(AssetList assets) {
+    public int saveAssertListToDB(AssetList assets) throws GoodCareException {
         int count = 0;
         Session session = sessionFactory.openSession();
         for (Asset asset : assets) {
-            try {
-                if (findBySecurityId(session, asset.getSecurityId()) == 0) {
-                    Transaction transaction = session.beginTransaction();
-                    session.save(asset);
-                    transaction.commit();
-                    count++;
-                }
-            } catch (GoodCareException e) {
-                logger.error(e.getMessage());
+            if (findBySecurityId(session, asset.getSecurityId()) == 0) {
+                Transaction transaction = session.beginTransaction();
+                session.save(asset);
+                transaction.commit();
+                count++;
             }
         }
         session.close();
         return count;
     }
 
-    public void updateAssertListInDB(ArrayList objectList) {
+    public void updateAssertListInDB(ArrayList objectList) throws GoodCareException {
         Session session = sessionFactory.openSession();
         for (Asset o : (AssetList) objectList) {
-            try {
-                Transaction transaction = session.beginTransaction();
-                o.setId(findBySecurityId(session, o.getSecurityId()));
-                session.merge(o);
-                transaction.commit();
-            } catch (GoodCareException e) {
-                logger.error(e.getMessage());
-            }
+            Transaction transaction = session.beginTransaction();
+            o.setId(findBySecurityId(session, o.getSecurityId()));
+            session.merge(o);
+            transaction.commit();
         }
         session.close();
     }
