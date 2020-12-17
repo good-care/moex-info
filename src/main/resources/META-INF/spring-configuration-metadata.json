@@ -1,0 +1,78 @@
+{
+  "groups": [
+    {
+      "name": "hibernate",
+      "type": "com.mokhovav.goodcare_moex_info.database.HibernateProperties",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties"
+    },
+    {
+      "name": "hibernate.entities",
+      "type": "com.mokhovav.goodcare_moex_info.database.HibernateProperties$Entities",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties",
+      "sourceMethod": "getEntities()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "hibernate.prefix",
+      "type": "java.lang.String",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties",
+      "defaultValue": "jdbc:postgresql"
+    },
+    {
+      "name": "hibernate.sql-dialect",
+      "type": "java.lang.String",
+      "description": "Description for hibernate.sql-dialect.",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties"
+    },
+    {
+      "name": "hibernate.driver-class-name",
+      "type": "java.lang.String",
+      "description": "Description for hibernate.driver-class-name.",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties"
+    },
+    {
+      "name": "hibernate.ddl-auto",
+      "type": "java.lang.String",
+      "description": "Description for hibernate.ddl-auto.",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties"
+    },
+    {
+      "name": "hibernate.host",
+      "type": "java.lang.String",
+      "description": "Description for hibernate.host.",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties"
+    },
+    {
+      "name": "hibernate.port",
+      "type": "java.lang.Integer",
+      "description": "Description for hibernate.port.",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties"
+    },
+    {
+      "name": "hibernate.database",
+      "type": "java.lang.String",
+      "description": "Description for hibernate.database.",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties"
+    },
+    {
+      "name": "hibernate.username",
+      "type": "java.lang.String",
+      "description": "Description for hibernate.username.",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties"
+    },
+    {
+      "name": "hibernate.password",
+      "type": "java.lang.String",
+      "description": "Description for hibernate.password.",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties"
+    },
+    {
+      "name": "hibernate.entities.moex",
+      "type": "java.lang.String",
+      "description": "Description for hibernate.entities.moex.",
+      "sourceType": "com.mokhovav.goodcare_moex_info.database.HibernateProperties$Entities"
+    }
+  ],
+  "hints": []
+}
