@@ -1,28 +1,31 @@
 #Common
 server:
-  port: 9090
+  port: 9096
 
 #Hibernate config
 hibernate:
-  prefix: jdbc:postgresql
-  sql-dialect: org.hibernate.dialect.PostgreSQLDialect
-  driver-class-name: org.postgresql.Driver
-  ddl-auto: update
+  host: ${DB_HOST:localhost}
+  port: ${DB_PORT:5432}
+  username: ${DB_USERNAME:user}
+  password: ${DB_PASSWORD:pwd}
+  database: ${DB_NAME:postgres}
+  entities: com.mokhovav.goodcare_moex_info.entites
 
-  host: localhost
-  port: 5432
-  database: goodcare
-  username: ${POSTGRES_USER}
-  password: ${POSTGRES_PASSWORD}
-  entities:
-    moex: com.mokhovav.goodcare_moex_info.entites
+#RabbitMQ
+spring:
+  rabbitmq:
+    host: ${RMQ_HOST:localhost}
+    port: ${RMQ_API_PORT:5672}
+    username: ${RMQ_USERNAME:user}
+    password: ${RMQ_PASSWORD:pwd}
+
 
 #slf4j Logger
 logging:
   file:
     name: logs/application-debug.log
   pattern:
-    console: "%black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable"
+    console: "%cyan(%d{ISO8601}) %highlight(%-5level) [%green(%t)] %yellow(%C{1.}): %msg%n%throwable"
     file: "%d %p %C{1.} [%t] %m%n"
   level:
     root: info

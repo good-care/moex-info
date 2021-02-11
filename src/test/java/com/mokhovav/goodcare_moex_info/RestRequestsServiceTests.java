@@ -84,7 +84,7 @@ public class RestRequestsServiceTests {
                             .orElse(0) > 0
             );
         } catch (GoodCareException e) {
-            Assertions.assertTrue(false);
+            Assertions.fail();
             logger.error(e.getMessage());
         }
     }
@@ -110,7 +110,7 @@ public class RestRequestsServiceTests {
                             .orElse(0) > 0
             );
         } catch (GoodCareException e) {
-            Assertions.assertTrue(false);
+            Assertions.fail();
             logger.error(e.getMessage());
         }
     }

@@ -14,11 +14,11 @@ public class MOEXRequests {
     }
 
     public static String getStockShareHistory(String securityId, String dateFrom) {
-        return "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities" + "/" + securityId + ".json?from=" + dateFrom + "&iss.meta=off&history.columns=SECID,TRADEDATE,CLOSE";
+        return "https://iss.moex.com/iss/history/engines/stock/markets/shares/securities" + "/" + securityId + ".json?from=" + dateFrom + "&iss.meta=off&history.columns=SECID,TRADEDATE,LEGALCLOSEPRICE";
     }
 
     public static String getStockBondHistory(String securityId, String dateFrom) {
-        return "https://iss.moex.com/iss/history/engines/stock/markets/bonds/securities" + "/" + securityId + ".json?from=" + dateFrom + "&iss.meta=off&history.columns=SECID,TRADEDATE,CLOSE";
+        return "https://iss.moex.com/iss/history/engines/stock/markets/bonds/securities" + "/" + securityId + ".json?from=" + dateFrom + "&iss.meta=off&history.columns=SECID,TRADEDATE,LEGALCLOSEPRICE";
     }
 
     public static String getStockShares() {

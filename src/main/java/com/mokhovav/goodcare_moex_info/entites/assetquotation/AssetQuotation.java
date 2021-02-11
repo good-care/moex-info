@@ -1,6 +1,5 @@
 package com.mokhovav.goodcare_moex_info.entites.assetquotation;
 
-import com.mokhovav.goodcare_moex_info.entites.QuotationType;
 import com.mokhovav.goodcare_moex_info.entites.SimplyEntity;
 import com.mokhovav.goodcare_moex_info.entites.assets.Asset;
 

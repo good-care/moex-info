@@ -1,5 +1,7 @@
 package com.mokhovav.goodcare_moex_info.entites;
 
+import com.mokhovav.goodcare_moex_info.entites.users.User;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -7,9 +9,9 @@ import java.math.BigDecimal;
 @Table(name = "goodcare_portfolios")
 public class Portfolio extends SimplyNameEntity {
     private Currency currency;
-    @ManyToOne(targetEntity = Account.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
     @Column(precision = 19, scale = 6)
     private BigDecimal cost;
 
@@ -24,12 +26,12 @@ public class Portfolio extends SimplyNameEntity {
         this.currency = currency;
     }
 
-    public Account getAccount() {
-        return account;
+    public User getAccount() {
+        return user;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccount(User user) {
+        this.user = user;
     }
 
     public BigDecimal getCost() {
@@ -38,5 +40,13 @@ public class Portfolio extends SimplyNameEntity {
 
     public void setCost(BigDecimal cost) {
         this.cost = cost;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

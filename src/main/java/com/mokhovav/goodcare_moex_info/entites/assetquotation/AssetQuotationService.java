@@ -1,7 +1,7 @@
 package com.mokhovav.goodcare_moex_info.entites.assetquotation;
 
 import com.mokhovav.goodcare_moex_info.RestRequestsService;
-import com.mokhovav.goodcare_moex_info.entites.QuotationType;
+import com.mokhovav.goodcare_moex_info.entites.AssetType;
 import com.mokhovav.goodcare_moex_info.entites.assets.Asset;
 import com.mokhovav.goodcare_moex_info.entites.assets.AssetService;
 import com.mokhovav.goodcare_moex_info.exceptions.GoodCareException;
@@ -40,18 +40,6 @@ public class AssetQuotationService {
         this.logger = logger;
     }
 
-    //    public AssetQuotationList getStockIndexHistory(String assetName, String date) throws GoodCareException {
-//        Asset asset = assetService.findBySecurityId(assetName);
-//        return getStockHistory(asset, date, AssetType.INDEX);
-//    }
-//    public AssetQuotationList getStockShareHistory(String assetName, String date) throws GoodCareException {
-//        Asset asset = assetService.findBySecurityId(assetName);
-//        return getStockHistory(asset, date, AssetType.SHARE);
-//    }
-//    public AssetQuotationList getStockBondHistory(String assetName, String date) throws GoodCareException {
-//        Asset asset = assetService.findBySecurityId(assetName);
-//        return getStockHistory(asset, date, AssetType.BOND);
-//    }
     public AssetQuotationList getStockHistory(String assetName, String date) throws GoodCareException {
         Asset asset = assetService.findBySecurityId(assetName);
         return getStockHistory(asset, date);
@@ -146,7 +134,7 @@ public class AssetQuotationService {
         Session session = sessionFactory.openSession();
 
         for (AssetQuotation quotation : quotations) {
-            if (findByAssetAndDate(quotation, session) == 0) {
+            if (findByAssetQuotation(quotation, session) == 0) {
                 Transaction transaction = session.beginTransaction();
                 session.save(quotation);
                 transaction.commit();
@@ -157,7 +145,7 @@ public class AssetQuotationService {
         return count;
     }
 
-    public int updateHistoryOfAllAssets(String date) throws GoodCareException {
+    public int saveHistoryOfAllAssets(String date) throws GoodCareException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         ScrollableResults itemCursor = session.createQuery("FROM Asset").scroll();
@@ -167,7 +155,9 @@ public class AssetQuotationService {
             Asset asset = (Asset) itemCursor.get(0);
             AssetQuotationList assetQuotations = getStockHistory(asset, date);
             for (AssetQuotation quotation : assetQuotations) {
-                if (findByAssetAndDate(quotation, session) == 0) {
+                if (quotation.getQuotation() != null &&
+                        findByAssetQuotation(quotation, session) == 0
+                ) {
                     session.save(quotation);
                     result++;
                 }
@@ -178,14 +168,48 @@ public class AssetQuotationService {
             }
             logger.debug("Number of assets = " + count +
                     " type: " + asset.getAssetType().name() +
-                    " asset: " +  asset.getSecurityId());
+                    " asset: " + asset.getSecurityId());
         }
         transaction.commit();
         session.close();
         return result;
     }
 
-    private Long findByAssetAndDate(AssetQuotation quotation, Session session) throws GoodCareException {
+    public int updateHistoryOfAssets(String date, AssetType assetType) throws GoodCareException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+        ScrollableResults itemCursor = session.createQuery("FROM Asset").scroll();
+        int count = 0;
+        int result = 0;
+        long id;
+        while (itemCursor.next()) {
+            Asset asset = (Asset) itemCursor.get(0);
+            if (asset.getAssetType() != assetType) continue;
+            AssetQuotationList assetQuotations = getStockHistory(asset, date);
+            for (AssetQuotation quotation : assetQuotations) {
+                AssetQuotation dbQuotations = getByAssetQuotation(quotation, session);
+                if (dbQuotations != null) {
+                    dbQuotations.setQuotation(quotation.getQuotation());
+                    dbQuotations.setQuotationType(quotation.getQuotationType());
+                    ;
+                    session.update(dbQuotations);
+                    result++;
+                }
+            }
+            if (++count % 100 == 0) {
+                session.flush();
+                session.clear();
+            }
+            logger.debug("Number of assets = " + count +
+                    " type: " + asset.getAssetType().name() +
+                    " asset: " + asset.getSecurityId());
+        }
+        transaction.commit();
+        session.close();
+        return result;
+    }
+
+    private Long findByAssetQuotation(AssetQuotation quotation, Session session) throws GoodCareException {
         try {
             AssetQuotation res = (AssetQuotation) session.createQuery(
                     "from AssetQuotation where moexAsset='" + quotation.getMoexAsset().getId() + "' and dateAndTime='" + quotation.getDateAndTime() + "'"
@@ -195,5 +219,15 @@ public class AssetQuotationService {
             throw new GoodCareException(this, e.getMessage());
         }
         return 0L;
+    }
+
+    private AssetQuotation getByAssetQuotation(AssetQuotation quotation, Session session) throws GoodCareException {
+        try {
+            return (AssetQuotation) session.createQuery(
+                    "from AssetQuotation where moexAsset='" + quotation.getMoexAsset().getId() + "' and dateAndTime='" + quotation.getDateAndTime() + "'"
+            ).uniqueResult();
+        } catch (Exception e) {
+            throw new GoodCareException(this, e.getMessage());
+        }
     }
 }

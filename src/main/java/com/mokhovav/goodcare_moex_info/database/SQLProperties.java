@@ -7,12 +7,12 @@ import org.springframework.validation.annotation.Validated;
 @Configuration
 @ConfigurationProperties(prefix = "hibernate")
 @Validated
-public class HibernateProperties {
-    private String prefix;
-    private String sql_dialect;
-    private String driver_class_name;
-    private String ddl_auto;
-    private String host;
+public class SQLProperties {
+    private String prefix = "jdbc:postgresql";
+    private String sql_dialect = "org.hibernate.dialect.PostgreSQLDialect";
+    private String driver_class_name = "org.postgresql.Driver";
+    private String ddl_auto = "update";
+    private String host = "localhost";
     private int port;
     private String database;
     private String username;

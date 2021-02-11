@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "goodcare_assets")
 public class Asset extends SimplyNameEntity {
-    @Column(name = "security_id")
+    @Column(name = "security_id", unique = true)
     private String securityId;
     private Currency currency;
     @ManyToOne(targetEntity = Issuer.class, fetch = FetchType.EAGER)

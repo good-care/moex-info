@@ -1,14 +1,12 @@
 package com.mokhovav.goodcare_moex_info;
 
-import com.mokhovav.goodcare_moex_info.entites.assetquotation.AssetQuotation;
+import com.mokhovav.goodcare_moex_info.entites.AssetType;
 import com.mokhovav.goodcare_moex_info.entites.assetquotation.AssetQuotationList;
 import com.mokhovav.goodcare_moex_info.entites.assetquotation.AssetQuotationService;
-import com.mokhovav.goodcare_moex_info.entites.assets.AssetData;
 import com.mokhovav.goodcare_moex_info.entites.assets.AssetList;
 import com.mokhovav.goodcare_moex_info.entites.assets.AssetService;
 import com.mokhovav.goodcare_moex_info.exceptions.GoodCareException;
 import com.mokhovav.goodcare_moex_info.logging.Logger;
-import com.mokhovav.goodcare_moex_info.moexdata.MOEXData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
@@ -17,11 +15,8 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @ContextConfiguration(classes = {GoodCareMOEXInfo.class})
 @SpringBootTest
@@ -43,22 +38,28 @@ public class EntitiesServicesTests {
         Date beginTime = new Date();
 
         temp = getIndexList();
-        logger.info("Index list size: " + temp.size());
-        Assertions.assertTrue(temp.size() > 0);
-        result.addAll(temp);
+        if (temp != null) {
+            logger.info("Index list size: " + temp.size());
+            Assertions.assertTrue(temp.size() > 0);
+            result.addAll(temp);
+        }
         temp = getShareList();
-        logger.info("Shares list size: " + temp.size());
-        Assertions.assertTrue(temp.size() > 0);
-        result.addAll(temp);
+        if (temp != null) {
+            logger.info("Shares list size: " + temp.size());
+            Assertions.assertTrue(temp.size() > 0);
+            result.addAll(temp);
+        }
         temp = getBondList();
-        logger.info("Bonds list size: " + temp.size());
-        Assertions.assertTrue(temp.size() > 0);
-        result.addAll(temp);
+        if (temp != null) {
+            logger.info("Bonds list size: " + temp.size());
+            Assertions.assertTrue(temp.size() > 0);
+            result.addAll(temp);
+        }
 
         try {
             logger.debug("The Number of records was updated: " + assetService.saveAssertListToDB(result));
         } catch (GoodCareException e) {
-            Assertions.assertTrue(false);
+            Assertions.fail();
             logger.debug(e.getMessage());
         }
 
@@ -75,7 +76,7 @@ public class EntitiesServicesTests {
             assetQuotationService.saveQuotationListToDB(assetQuotations);
             logger.debug("Spent time (s): " + ((double) (new Date().getTime() - beginDate.getTime())) / 1000);
         } catch (GoodCareException e) {
-            Assertions.assertTrue(false);
+            Assertions.fail();
             logger.debug(e.getMessage());
         }
     }
@@ -86,10 +87,52 @@ public class EntitiesServicesTests {
         try {
             logger.debug("addQuotationsHistoryToDataBase is tested");
             Date beginTime = new Date();
-            int count = assetQuotationService.updateHistoryOfAllAssets("2020-09-01");
+            int count = assetQuotationService.saveHistoryOfAllAssets("2020-09-01");
             logger.debug("Count = " + count + "; Spent time (s): " + ((double) (new Date().getTime() - beginTime.getTime())) / 1000);
         } catch (GoodCareException e) {
-            Assertions.assertTrue(false);
+            Assertions.fail();
+            logger.debug(e.getMessage());
+        }
+    }
+
+//    @Test
+//    @Order(4)
+    public void updateIndexQuotationsHistoryToDataBase() {
+        try {
+            logger.debug("updateIndexQuotationsHistoryToDataBase is tested");
+            Date beginTime = new Date();
+            int count = assetQuotationService.updateHistoryOfAssets("2020-09-01", AssetType.INDEX);
+            logger.debug("Count = " + count + "; Spent time (s): " + ((double) (new Date().getTime() - beginTime.getTime())) / 1000);
+        } catch (GoodCareException e) {
+            Assertions.fail();
+            logger.debug(e.getMessage());
+        }
+    }
+
+//    @Test
+//    @Order(6)
+    public void updateBondQuotationsHistoryToDataBase() {
+        try {
+            logger.debug("updateBondQuotationsHistoryToDataBase is tested");
+            Date beginTime = new Date();
+            int count = assetQuotationService.updateHistoryOfAssets("2020-09-01", AssetType.BOND);
+            logger.debug("Count = " + count + "; Spent time (s): " + ((double) (new Date().getTime() - beginTime.getTime())) / 1000);
+        } catch (GoodCareException e) {
+            Assertions.fail();
+            logger.debug(e.getMessage());
+        }
+    }
+
+//    @Test
+//    @Order(5)
+    public void updateShareQuotationsHistoryToDataBase() {
+        try {
+            logger.debug("updateShareQuotationsHistoryToDataBase is tested");
+            Date beginTime = new Date();
+            int count = assetQuotationService.updateHistoryOfAssets("2020-09-01", AssetType.SHARE);
+            logger.debug("Count = " + count + "; Spent time (s): " + ((double) (new Date().getTime() - beginTime.getTime())) / 1000);
+        } catch (GoodCareException e) {
+            Assertions.fail();
             logger.debug(e.getMessage());
         }
     }

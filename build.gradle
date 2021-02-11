@@ -1,6 +1,6 @@
 plugins {
-    id 'org.springframework.boot' version '2.4.0'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
 
@@ -12,17 +12,26 @@ repositories {
     mavenCentral()
 }
 
+//bootBuildImage {
+//    imageName = "goodcare/goodcare_moex_info"
+//}
+
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
     implementation 'org.hibernate:hibernate-core'
     implementation 'org.springframework:spring-orm'
+    implementation 'org.jetbrains:annotations:20.1.0'
     // only required at runtime
     runtimeOnly 'org.postgresql:postgresql'
 
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.7.0'
+    testCompile group: 'junit', name: 'junit', version: '4.13.1'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }

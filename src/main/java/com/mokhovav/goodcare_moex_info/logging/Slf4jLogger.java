@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component("Slf4jLogger")
 @Primary
 public class Slf4jLogger implements Logger {
-    private org.slf4j.Logger logger;
+    private final org.slf4j.Logger logger;
 
     public Slf4jLogger() {
         logger = LoggerFactory.getLogger(this.getClass());
