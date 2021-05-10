@@ -4,6 +4,7 @@ import com.mokhovav.goodcare_moex_info.entites.assets.Asset;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "goodcare_portfolios_assets")
@@ -20,6 +21,8 @@ public class PortfolioAsset extends SimplyNameEntity {
     private BigDecimal cost;     //BigDecimal is required for currencies
     @Column(precision = 19, scale = 6)
     private BigDecimal quotation;
+    @Column(name = "date_time")
+    private Timestamp dateAndTime;
 
     public PortfolioAsset() {
     }
@@ -30,6 +33,14 @@ public class PortfolioAsset extends SimplyNameEntity {
 
     public void setMoexAsset(Asset moexAsset) {
         this.moexAsset = moexAsset;
+    }
+
+    public Timestamp getDateAndTime() {
+        return dateAndTime;
+    }
+
+    public void setDateAndTime(Timestamp dateAndTime) {
+        this.dateAndTime = dateAndTime;
     }
 
     public Portfolio getPortfolio() {

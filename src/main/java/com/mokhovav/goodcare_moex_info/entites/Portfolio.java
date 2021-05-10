@@ -26,14 +26,6 @@ public class Portfolio extends SimplyNameEntity {
         this.currency = currency;
     }
 
-    public User getAccount() {
-        return user;
-    }
-
-    public void setAccount(User user) {
-        this.user = user;
-    }
-
     public BigDecimal getCost() {
         return cost;
     }
